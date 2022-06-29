@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+    web:
+        build: .
+        container_name: web
+        volumes:
+            - /mnt/DATA/BACKUP/ALLSITE:/var/www/html
+        ports:
+            - 80:80
+            - 443:443
+        depends_on:
+            - db_pgsql
+            - db_mysql
+
+    db_pgsql:
+        image: postgres:13
+        container_name: pgsql
+        environment:
+            LANGUAGE: 'ru_UA.UTF-8'
+            POSTGRES_PASSWORD: 'qwe123'
+        volumes:
+            - /mnt/DATA/BACKUP/postgresql13:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
+
+    db_mysql:
+        build: mysql/.
+        container_name: mysql
+#        restart: unless-stopped
+        command: --default-authentication-plugin=mysql_native_password
+        volumes:
+             - /mnt/DATA/BACKUP/MYSQL:/var/lib/mysql
+#        environment:
+#            LANGUAGE: 'ru_UA.UTF-8'
+#            MYSQL_ROOT_PASSWORD: qwe123
+#            MYSQL_USER: user
+#            MYSQL_PASSWORD: 'qwe123'
+        ports:
+           - 3303:3306
